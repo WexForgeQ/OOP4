@@ -10,13 +10,13 @@ namespace LAB4
     interface IStart
     {
         public void Start();
-        
+
     }
-    abstract public class   Challenge
+    abstract public class Challenge
     {
-        
+
         protected string time;
-       
+
 
         public virtual string Time
         {
@@ -34,7 +34,7 @@ namespace LAB4
             time = "Default";
         }
         public abstract void Start();
-        
+
 
         public override bool Equals(object obj)
         {
@@ -47,11 +47,11 @@ namespace LAB4
         }
         public override string ToString()
         {
-            return "Тип объекта:" + base.GetType() + " Значение объекта:"+base.ToString();
+            return "Тип объекта:" + base.GetType() + " Значение объекта:" + base.ToString();
         }
 
     }
-    public class Test:Challenge
+    public class Test : Challenge
     {
         protected string name;
         public virtual string Name
@@ -59,7 +59,7 @@ namespace LAB4
             get => name;
             set => name = value;
         }
-        
+
         public Test()
         {
             Name = "Default";
@@ -103,9 +103,9 @@ namespace LAB4
             return "Тип объекта:" + GetType() + " Кабинет:" + classroom;
         }
     }
-    public class GradExam:Exam
+    public class GradExam : Exam
     {
-        protected string subject;
+        public string subject;
         public virtual string Subject { get; set; }
 
         public GradExam(string sub)
@@ -127,7 +127,7 @@ namespace LAB4
             return "Тип объекта:" + base.GetType() + " Предмет:" + subject;
         }
     }
-    sealed public class Question:GradExam
+    sealed public class Question : GradExam
     {
         string question;
         string answer;
@@ -144,11 +144,11 @@ namespace LAB4
         }
         public void DisplayQuestion()
         {
-            Console.WriteLine("Вопрос: "+ question);
+            Console.WriteLine("Вопрос: " + question);
         }
         public void CheckAnswer(string answ)
         {
-            if(answ==answer)
+            if (answ == answer)
                 Console.WriteLine("Верно");
             else
                 Console.WriteLine("Неверно");
@@ -160,7 +160,7 @@ namespace LAB4
         }
         public override string ToString()
         {
-            return "Тип объекта:" + GetType() + " Вопрос:"+question + " Ответ:"+answer;
+            return "Тип объекта:" + GetType() + " Вопрос:" + question + " Ответ:" + answer;
         }
     }
     class Program
@@ -173,6 +173,12 @@ namespace LAB4
             Console.WriteLine(GA.ToString());
             A.CheckAnswer("НЕ");
             GA.Start();
+            if(A is GradExam)
+                Console.WriteLine("A is GrandExam");
+            GA = A as GradExam;
+            if(GA != null)
+                Console.WriteLine("Произошло приведение");
+            Console.WriteLine(GA.ToString());
         }
     }
 }
