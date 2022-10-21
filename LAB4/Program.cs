@@ -7,6 +7,11 @@ using System.Text;
 
 namespace LAB4
 {
+
+
+     
+
+
     interface IStart
     {
         public void Start();
@@ -163,11 +168,44 @@ namespace LAB4
             return "Тип объекта:" + GetType() + " Вопрос:" + question + " Ответ:" + answer;
         }
     }
+
+
+    static class Printer
+    {
+
+        public static void IAmPrinting(Challenge test)
+        {
+            if (test is Exam testing)
+            {
+                Console.WriteLine(testing.ToString());
+            }
+            else if (test is GradExam final_exam)
+            {
+                Console.WriteLine(final_exam.ToString());
+            }
+            else if (test is Test test1)
+            {
+                Console.WriteLine(test1.ToString());
+            }
+            else if (test is Question question)
+            {
+                Console.WriteLine(question.ToString());
+            }
+            else
+            {
+                Console.WriteLine("Error");
+            }
+        }
+    }
+
+
+
     class Program
     {
         static void Main(string[] args)
         {
-            GradExam GA = new GradExam();
+            Exam Ex = new Exam(314);
+            GradExam GA = new GradExam("Биология");
             Question A = new Question("Как?", "Так");
             Console.WriteLine(A.ToString());
             Console.WriteLine(GA.ToString());
@@ -175,10 +213,15 @@ namespace LAB4
             GA.Start();
             if(A is GradExam)
                 Console.WriteLine("A is GrandExam");
-            GA = A as GradExam;
-            if(GA != null)
-                Console.WriteLine("Произошло приведение");
-            Console.WriteLine(GA.ToString());
+            //GA = A as GradExam;
+            //if(GA != null)
+                //Console.WriteLine("Произошло приведение");
+            //Console.WriteLine(GA.ToString());
+            Challenge [] Arr = { GA, A, Ex };
+            for(int i=0; i<3; i++)
+            {
+                Printer.IAmPrinting(Arr[i]);
+            }
         }
     }
 }
