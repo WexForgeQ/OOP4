@@ -7,9 +7,8 @@ using System.Text;
 
 namespace LAB4
 {
+   
 
-
-     
 
 
     interface IStart
@@ -58,21 +57,28 @@ namespace LAB4
     }
     public class Test : Challenge
     {
-        protected string name;
-        public virtual string Name
+        public struct Student
         {
-            get => name;
-            set => name = value;
+
+           public  string name;
+           public string school;
+           public int brthyear;
+           public int grade;
+
         }
+
+        Student ST = new Student();
+
+
 
         public Test()
         {
-            Name = "Default";
+            ST.name = "Default";
         }
 
         public Test(string nm)
         {
-            name = nm;
+            ST.name = nm;
         }
 
         public override void Start()
@@ -82,7 +88,7 @@ namespace LAB4
 
         public override string ToString()
         {
-            return "Тип объекта:" + GetType() + " Имя:" + name;
+            return "Тип объекта:" + GetType() + " Имя:" + ST.name;
         }
     }
     public class Exam : Test
@@ -107,19 +113,29 @@ namespace LAB4
         {
             return "Тип объекта:" + GetType() + " Кабинет:" + classroom;
         }
+        public virtual int Sum(int a, int b, int c)
+        {
+            return a + b + c;
+        }
     }
     public class GradExam : Exam
     {
-        public string subject;
-        public virtual string Subject { get; set; }
-
-        public GradExam(string sub)
+        enum Subjects
         {
-            subject = sub;
+            Биология = 1,
+            Математика,
+            Русский,
+            Default
+        }
+        Subjects subject = new Subjects();
+        public virtual string Subject { get; set; }
+        public GradExam(int i)
+        {
+            subject = (Subjects)i;
         }
         public GradExam()
         {
-            subject = "Default";
+            subject = Subjects.Default;
         }
 
         public override void Start()
@@ -131,11 +147,17 @@ namespace LAB4
         {
             return "Тип объекта:" + base.GetType() + " Предмет:" + subject;
         }
+        struct Questions
+        {
+          
+        }
     }
     sealed public class Question : GradExam
     {
         string question;
         string answer;
+
+        
 
         public Question()
         {
@@ -204,8 +226,10 @@ namespace LAB4
     {
         static void Main(string[] args)
         {
+            Test Ts = new Test("GFfg");
+            Console.WriteLine(Ts.ToString());
             Exam Ex = new Exam(314);
-            GradExam GA = new GradExam("Биология");
+            GradExam GA = new GradExam(1);
             Question A = new Question("Как?", "Так");
             Console.WriteLine(A.ToString());
             Console.WriteLine(GA.ToString());
@@ -222,6 +246,7 @@ namespace LAB4
             {
                 Printer.IAmPrinting(Arr[i]);
             }
+            //Console.WriteLine(Subjects.Биология);
         }
     }
 }
