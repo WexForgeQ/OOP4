@@ -91,9 +91,9 @@ namespace LAB4
             return "Тип объекта:" + GetType() + " Имя:" + ST.name;
         }
     }
-    public class Exam : Test
+    public partial class Exam : Test
     {
-        protected int classroom;
+        public int classroom;
 
         public int Classroom { get; set; }
 
@@ -113,27 +113,55 @@ namespace LAB4
         {
             return "Тип объекта:" + GetType() + " Кабинет:" + classroom;
         }
-        public virtual int Sum(int a, int b, int c)
+
+        public List <Question> questions = new List<Question>();
+
+        public Exam(List <Question> Q) => questions = Q;
+
+        public Question this[int index]
         {
-            return a + b + c;
+            get => questions[index];
+            set => questions[index] = value;
         }
+
+        public void AddQuestToTest(string qua)
+        {
+
+            Question Q = new Question(qua);
+            questions.Add(Q);
+
+        }
+        public void DisplayQuestions()
+        {
+            int i = 0;
+            foreach (Question q in questions)
+            {
+                i++;
+                Console.WriteLine("Вопрос №"+ i + ": " + q.question);
+            }
+
+        }
+
     }
     public class GradExam : Exam
     {
-        enum Subjects
+        public enum Subjects
         {
             Биология = 1,
             Математика,
             Русский,
             Default
         }
-        Subjects subject = new Subjects();
+        public Subjects subject = new Subjects();
+
         public virtual string Subject { get; set; }
+
         public GradExam(int i)
         {
             subject = (Subjects)i;
         }
-        public GradExam()
+
+    public GradExam()
         {
             subject = Subjects.Default;
         }
@@ -147,48 +175,36 @@ namespace LAB4
         {
             return "Тип объекта:" + base.GetType() + " Предмет:" + subject;
         }
-        struct Questions
-        {
-          
-        }
+   
     }
     sealed public class Question : GradExam
     {
-        string question;
-        string answer;
-
-        
+        public string question;
 
         public Question()
         {
             question = "Default";
-            answer = "Default";
         }
-        public Question(string que, string answ)
+
+        public Question(string que)
         {
             question = que;
-            answer = answ;
         }
         public void DisplayQuestion()
         {
             Console.WriteLine("Вопрос: " + question);
-        }
-        public void CheckAnswer(string answ)
-        {
-            if (answ == answer)
-                Console.WriteLine("Верно");
-            else
-                Console.WriteLine("Неверно");
         }
 
         public override void Start()
         {
             Console.WriteLine("Тест(Question) начался");
         }
+
         public override string ToString()
         {
-            return "Тип объекта:" + GetType() + " Вопрос:" + question + " Ответ:" + answer;
+            return "Тип объекта:" + GetType() + " Вопрос:" + question;
         }
+
     }
 
 
@@ -221,32 +237,99 @@ namespace LAB4
     }
 
 
+    public class Session
+    {
+        List<Exam> exams = new List<Exam>();
+        List<GradExam> gradExams = new List<GradExam>();
+
+        public List<Exam> Exams
+        {
+            get
+            {
+                return exams;
+            }
+            set
+            {
+                exams = value;
+            }
+        }
+        public List<GradExam> GradExams
+        {
+            get
+            {
+                return gradExams;
+            }
+            set
+            {
+                gradExams = value;
+            }
+        }
+        public void AddExam(Exam A)
+        {
+            exams.Add(A);
+        }
+        public void RemoveExam(Exam A)
+        {
+            exams.Remove(A);
+        }
+        public void DisplayExams()
+        {
+            Console.WriteLine("Список тестов: ");
+            foreach(Exam exam in Exams)
+            {
+                Console.Write("Тест в кабинете №:" + exam.classroom + "; ");
+            }
+            Console.WriteLine();
+
+        }
+        public void DisplayGradExams()
+        {
+
+            Console.WriteLine("Список экзаменов: ");
+            foreach (GradExam grexam in GradExams)
+            {
+                Console.Write("Тест по предмету: " + grexam.subject + "; ");
+            }
+            Console.WriteLine();
+
+        }
+
+
+        public void AddGrandExam(GradExam A)
+        {
+            gradExams.Add(A);
+        }
+        public void RemoveGrandExam(GradExam A)
+        {
+            gradExams.Remove(A);
+        }
+
+    }
+
 
     class Program
     {
         static void Main(string[] args)
         {
-            Test Ts = new Test("GFfg");
-            Console.WriteLine(Ts.ToString());
-            Exam Ex = new Exam(314);
-            GradExam GA = new GradExam(1);
-            Question A = new Question("Как?", "Так");
-            Console.WriteLine(A.ToString());
-            Console.WriteLine(GA.ToString());
-            A.CheckAnswer("НЕ");
-            GA.Start();
-            if(A is GradExam)
-                Console.WriteLine("A is GrandExam");
-            //GA = A as GradExam;
-            //if(GA != null)
-                //Console.WriteLine("Произошло приведение");
-            //Console.WriteLine(GA.ToString());
-            Challenge [] Arr = { GA, A, Ex };
-            for(int i=0; i<3; i++)
-            {
-                Printer.IAmPrinting(Arr[i]);
-            }
-            //Console.WriteLine(Subjects.Биология);
+            GradExam A = new GradExam(1);
+            GradExam B = new GradExam(2);
+            GradExam C = new GradExam(3);
+            Exam D = new Exam(314);
+            Exam E = new Exam(312);
+            A.AddQuestToTest("fff");
+            A.AddQuestToTest("dfds");
+            B.AddQuestToTest("dfds");
+            B.AddQuestToTest("dfds");
+            C.AddQuestToTest("dfds");
+            Session Sess = new Session();
+            Sess.AddGrandExam(A);
+            Sess.AddGrandExam(B);
+            Sess.AddGrandExam(C);
+            Sess.AddExam(D);
+            Sess.AddExam(E);
+            Sess.DisplayExams();
+            Sess.DisplayGradExams();
+           
         }
     }
 }
