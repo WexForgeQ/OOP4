@@ -26,7 +26,12 @@ namespace LAB4
         { }
 
     }
+    public class ClassroomException : ArgumentOutOfRangeException
+    {
+        public ClassroomException(string message) : base(message)
+        { }
 
+    }
 
 
 
@@ -114,7 +119,20 @@ namespace LAB4
     {
         public int classroom;
 
-        public int Classroom { get; set; }
+        public int Classroom 
+        { 
+            get
+            {
+                return classroom;
+            }
+            set
+            {
+                if (value < 101 || value > 320)
+                    throw new ClassroomException(""+value);
+                else
+                    classroom = value;
+            }
+        }
 
         public Exam(int cls)
         {
@@ -221,10 +239,16 @@ namespace LAB4
 
         public string Quest
         {
-            get => question;
+            get
+            {
+                return question;
+            }
+               
             set
             {
-                if (!value.Contains('?'))
+                if (value == null)
+                    throw new QuestionException("Вопрос не может быть пустым");
+                else if (!value.Contains('?'))
                     throw new QuestionException("В вопросе отсутствует символ <?>");
                 else
                     question = value;
@@ -477,7 +501,23 @@ namespace LAB4
             {
                 Console.WriteLine("Ошибка: " + e3.Message);
             }
-            
+            try
+            {
+                G.Quest = null;
+            }
+            catch (QuestionException e4)
+            {
+                Console.WriteLine("Ошибка: " + e4.Message);
+            }
+            try
+            {
+                G.Classroom = 100;
+            }
+            catch (ClassroomException e5)
+            {
+                Console.WriteLine("Ошбика: " + e5.Message);
+            }
+
         }
     }
 }
