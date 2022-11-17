@@ -7,7 +7,26 @@ using System.Text;
 
 namespace LAB4
 {
-   
+    public class SubjectException : ArgumentException
+    {
+
+        public SubjectException(string message, string sub) : base(message)
+        { Sub = sub; }
+        public SubjectException(string message) : base(message)
+        { }
+        public string Sub
+        {
+            get;
+        }
+
+    }
+    public class QuestionException : ArgumentException
+    {
+        public QuestionException(string message) : base(message)
+        { }
+
+    }
+
 
 
 
@@ -155,7 +174,20 @@ namespace LAB4
         public Subjects subject = new Subjects();
 
         public string subjectString;
-        public virtual string Subject { get; set; }
+        public string SubjectString
+            {
+            get { return subjectString; }
+            set {
+
+                if (value != "Биология" && value != "Математика" && value != "Русский" && value!= null)
+                    throw new SubjectException("Экзамена по заданнному предмету не существует", value);
+                else if (value == null)
+                    throw new SubjectException("Предмет экзамена не указан");
+                else
+                    subjectString = value;
+            }    
+
+            }
 
         public GradExam(int i)
         {
@@ -181,11 +213,23 @@ namespace LAB4
         {
             return "Тип объекта:" + base.GetType() + " Предмет:" + subjectString;
         }
-   
+        
     }
     sealed public class Question : GradExam
     {
         public string question;
+
+        public string Quest
+        {
+            get => question;
+            set
+            {
+                if (!value.Contains('?'))
+                    throw new QuestionException("В вопросе отсутствует символ <?>");
+                else
+                    question = value;
+            }
+        }
 
         public Question()
         {
@@ -210,6 +254,9 @@ namespace LAB4
         {
             return "Тип объекта:" + GetType() + " Вопрос:" + question;
         }
+
+
+
 
     }
 
@@ -359,11 +406,29 @@ namespace LAB4
 
     }
 
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     class Program
     {
         static void Main(string[] args)
         {
-            GradExam A = new GradExam("Биология");
+            /*GradExam A = new GradExam("Биология");
             GradExam B = new GradExam("Биология");
             GradExam C = new GradExam("Русский");
             Exam D = new Exam(314);
@@ -383,7 +448,36 @@ namespace LAB4
             Sess.DisplayGradExams();
             SessionControl.ExamsBySubjects("Биология", Sess);
             SessionControl.ChallengeCount(Sess);
-            SessionControl.ChallengeByQuest(Sess, 3);
+            SessionControl.ChallengeByQuest(Sess, 3)*/;
+            GradExam F = new GradExam();
+            Question G = new Question();
+            try
+            {
+                F.SubjectString = "gh";
+            }
+            catch(SubjectException e1)
+            {
+                Console.WriteLine("Ошибка: " + e1.Message);
+                Console.WriteLine("Неверное значение: " + e1.Sub);
+            }
+            try
+            {
+                F.SubjectString = null;
+            }
+            catch(SubjectException e2)
+            {
+                Console.WriteLine("Ошибка: " + e2.Message);
+                Console.WriteLine("Неверное значение: " + e2.Sub);
+            }
+            try
+            {
+                G.Quest = "gh";
+            }
+            catch(QuestionException e3)
+            {
+                Console.WriteLine("Ошибка: " + e3.Message);
+            }
+            
         }
     }
 }
