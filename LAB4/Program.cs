@@ -154,6 +154,7 @@ namespace LAB4
         }
         public Subjects subject = new Subjects();
 
+        public string subjectString;
         public virtual string Subject { get; set; }
 
         public GradExam(int i)
@@ -161,9 +162,14 @@ namespace LAB4
             subject = (Subjects)i;
         }
 
+        public GradExam(string s)
+        {
+            subjectString = s;
+        }
+
     public GradExam()
         {
-            subject = Subjects.Default;
+            subjectString = "Default";
         }
 
         public override void Start()
@@ -173,7 +179,7 @@ namespace LAB4
 
         public override string ToString()
         {
-            return "Тип объекта:" + base.GetType() + " Предмет:" + subject;
+            return "Тип объекта:" + base.GetType() + " Предмет:" + subjectString;
         }
    
     }
@@ -236,11 +242,13 @@ namespace LAB4
         }
     }
 
+   
+
 
     public class Session
     {
-        List<Exam> exams = new List<Exam>();
-        List<GradExam> gradExams = new List<GradExam>();
+        public List<Exam> exams = new List<Exam>();
+        public List<GradExam> gradExams = new List<GradExam>();
 
         public List<Exam> Exams
         {
@@ -286,9 +294,9 @@ namespace LAB4
         {
 
             Console.WriteLine("Список экзаменов: ");
-            foreach (GradExam grexam in GradExams)
+            foreach (GradExam grexam in gradExams)
             {
-                Console.Write("Тест по предмету: " + grexam.subject + "; ");
+                Console.Write("Тест #" + (gradExams.IndexOf(grexam)+1) + " по предмету: " + grexam.subjectString + "; ");
             }
             Console.WriteLine();
 
@@ -307,13 +315,57 @@ namespace LAB4
     }
 
 
+    public static class SessionControl
+    {
+
+        public static void ExamsBySubjects(string s, Session A)
+        {
+            Console.WriteLine("Экзамен по предмету: " + s);
+            foreach (GradExam gex in A.gradExams)
+            {
+                if (gex.subjectString == s)
+                {
+                    Console.Write("Экзамен #" + (A.gradExams.IndexOf(gex) + 1) + "; ");
+                }
+
+            }
+            Console.WriteLine();
+        }
+        public static void ChallengeCount(Session A)
+        {
+
+            Console.WriteLine("Общее количество испытаний в сесиии: " + (A.exams.Count + A.gradExams.Count));
+
+        }
+
+        public static void ChallengeByQuest(Session A, int i)
+        {
+            int n = 0;
+            foreach (Exam ex in A.exams)
+            {
+                if (ex.questions.Count == i)
+                    n++;
+            }
+            foreach (GradExam gex in A.gradExams)
+            {
+                if (gex.questions.Count == i)
+                    n++;
+            }
+            Console.WriteLine("Количество испытаний с " + i + " вопросами: "+ n);
+
+
+        }
+
+
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
-            GradExam A = new GradExam(1);
-            GradExam B = new GradExam(2);
-            GradExam C = new GradExam(3);
+            GradExam A = new GradExam("Биология");
+            GradExam B = new GradExam("Биология");
+            GradExam C = new GradExam("Русский");
             Exam D = new Exam(314);
             Exam E = new Exam(312);
             A.AddQuestToTest("fff");
@@ -329,7 +381,9 @@ namespace LAB4
             Sess.AddExam(E);
             Sess.DisplayExams();
             Sess.DisplayGradExams();
-           
+            SessionControl.ExamsBySubjects("Биология", Sess);
+            SessionControl.ChallengeCount(Sess);
+            SessionControl.ChallengeByQuest(Sess, 3);
         }
     }
 }
