@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Diagnostics;
+using System.IO;
 
 namespace LAB4
 {
@@ -127,6 +129,7 @@ namespace LAB4
             }
             set
             {
+                Debug.Assert(value != 314, "Кабинет 314 не подходит для экзамена");
                 if (value < 101 || value > 320)
                     throw new ClassroomException(""+value);
                 else
@@ -430,7 +433,28 @@ namespace LAB4
 
     }
 
+    public static class Logger
+    {
+        public static void ConsoleLog(Exception ex)
+        {
+            Console.WriteLine("--------------------");
+            Console.WriteLine(DateTime.Now + ": Была выявлена ошибка: " + ex.Message);
+            Console.WriteLine("--------------------");
+        }
+        public static void FileLog(Exception ex)
+        {
+
+            File.WriteAllText("Lab6Log.txt", DateTime.Now + ": Была выявлена ошибка: " + ex.Message);
+
+        }
     
+    
+    
+    
+    }
+
+
+
 
 
 
@@ -475,13 +499,17 @@ namespace LAB4
             SessionControl.ChallengeByQuest(Sess, 3)*/;
             GradExam F = new GradExam();
             Question G = new Question();
+
+            //G.Classroom = 315;
+
+            Console.WriteLine("-----Обработка исключений начата-----");
             try
             {
                 F.SubjectString = "gh";
             }
             catch(SubjectException e1)
             {
-                Console.WriteLine("Ошибка: " + e1.Message);
+                Console.WriteLine("Ошибка в объявлении предмета: " + e1.Message);
                 Console.WriteLine("Неверное значение: " + e1.Sub);
             }
             try
@@ -490,7 +518,7 @@ namespace LAB4
             }
             catch(SubjectException e2)
             {
-                Console.WriteLine("Ошибка: " + e2.Message);
+                Console.WriteLine("Ошибка в объявлении предмета: " + e2.Message);
                 Console.WriteLine("Неверное значение: " + e2.Sub);
             }
             try
@@ -499,7 +527,9 @@ namespace LAB4
             }
             catch(QuestionException e3)
             {
-                Console.WriteLine("Ошибка: " + e3.Message);
+                Console.WriteLine("Ошибка в объявлении вопроса: " + e3.Message);
+                Logger.ConsoleLog(e3);
+                Logger.FileLog(e3);
             }
             try
             {
@@ -507,7 +537,7 @@ namespace LAB4
             }
             catch (QuestionException e4)
             {
-                Console.WriteLine("Ошибка: " + e4.Message);
+                Console.WriteLine("Ошибка в объявлении вопроса: " + e4.Message);
             }
             try
             {
@@ -515,7 +545,13 @@ namespace LAB4
             }
             catch (ClassroomException e5)
             {
-                Console.WriteLine("Ошбика: " + e5.Message);
+                Console.WriteLine("Ошибка в объявлении кабинета: " + e5.Message);
+                Logger.ConsoleLog(e5);
+                Logger.FileLog(e5);
+            }
+            finally
+            {
+                Console.WriteLine("-----Обработка исключений завершена-----");
             }
 
         }
